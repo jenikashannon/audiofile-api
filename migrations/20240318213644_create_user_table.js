@@ -5,10 +5,11 @@
 exports.up = function (knex) {
 	return knex.schema.createTable("user", (table) => {
 		table.increments("id").primary;
-		table.string("username").notNullable();
 		table.string("email").notNullable();
-		table.string("password").notNullable();
-		table.string("spotify_code").notNullable();
+		table.string("product").notNullable();
+		table.string("access_token", 400).notNullable();
+		table.string("refresh_token", 400).notNullable();
+		table.string("expires_in").notNullable();
 		table.timestamp("created_at").defaultTo(knex.fn.now());
 		table
 			.timestamp("updated_at")
