@@ -9,7 +9,7 @@ exports.up = function (knex) {
 		table.string("product").notNullable();
 		table.string("access_token", 400).notNullable();
 		table.string("refresh_token", 400).notNullable();
-		table.string("expires_in").notNullable();
+		table.string("expires_at").notNullable();
 		table.timestamp("created_at").defaultTo(knex.fn.now());
 		table
 			.timestamp("updated_at")

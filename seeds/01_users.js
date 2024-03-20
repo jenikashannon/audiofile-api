@@ -12,7 +12,7 @@ exports.seed = async function (knex) {
 			email: "",
 			access_token: "",
 			refresh_token: "",
-			expires_in: "",
+			expires_at: "",
 		},
 	]);
 };

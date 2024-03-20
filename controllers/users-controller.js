@@ -30,6 +30,9 @@ async function create(req, res) {
 		const { access_token, refresh_token, expires_in } =
 			responseAccessToken.data;
 
+		// set expires_at
+		const expires_at = Date.now() + expires_in;
+
 		// get user email
 		const responseUserInfo = await axios.get(`${baseUrl}/me`, {
 			headers: { Authorization: `Bearer ${access_token}` },
@@ -42,7 +45,7 @@ async function create(req, res) {
 			product,
 			access_token,
 			refresh_token,
-			expires_in,
+			expires_at,
 		};
 
 		await knex("user").insert(newUser);
@@ -60,3 +63,29 @@ async function create(req, res) {
 }
 
 module.exports = { create };
+
+async function refreshToken(refresh_token) {
+	const responseRefreshToken = await axios.post(
+		`https://accounts.spotify.com/api/token`,
+		{
+			grant_type: "refresh_token",
+			refresh_token: refresh_token,
+			redirect_uri: process.env.REDIRECT_URI,
+		},
+		{
+			headers: {
+				Authorization: `Basic ${auth}`,
+				"content-type": "application/x-www-form-urlencoded",
+			},
+		}
+	);
+}
+
+async function isAccessTokenValid(id) {
+	const expires_at = await knex("user")
+		.where({ id })
+		.select("expires_at")
+		.first();
+
+	return expires_at > Date.now();
+}
