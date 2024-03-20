@@ -1,5 +1,4 @@
 const knex = require("knex")(require("../knexfile"));
-
 const axios = require("axios");
 
 const baseUrl = "https://api.spotify.com/v1";

@@ -8,6 +8,7 @@ const PORT = process.env.PORT ?? 1700;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
 
 app.use((_req, res, next) => {
 	// res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
@@ -21,6 +22,9 @@ app.use("/api/spotify", spotifyRoutes);
 
 const usersRoutes = require("./routes/users-routes.js");
 app.use("/api/users", usersRoutes);
+
+const cratesRoutes = require("./routes/crates-routes.js");
+app.use("/api/crates", cratesRoutes);
 
 app.listen(PORT, () => {
 	console.log(`listening on port ${PORT}`);
