@@ -16,6 +16,7 @@ exports.up = function (knex) {
 			.string("cover_art")
 			.defaultTo("http://localhost:1700/images/crate.svg");
 		table.boolean("empty_crate").notNullable();
+		table.boolean("default_crate").notNullable().defaultTo(false);
 		table.timestamp("created_at").defaultTo(knex.fn.now());
 		table
 			.timestamp("updated_at")
