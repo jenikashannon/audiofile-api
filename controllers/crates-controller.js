@@ -1,7 +1,7 @@
 const knex = require("knex")(require("../knexfile"));
 
 async function findAll(req, res) {
-	const user_id = req.params.id;
+	const user_id = req.params.user_id;
 
 	const crates = await knex("crate").where({ user_id });
 
@@ -9,12 +9,9 @@ async function findAll(req, res) {
 		return res.status(404);
 	}
 
-	// add album count
-	crates.forEach(async (crate) => {
-		crate.albumCount = await countAlbums(crate.id);
-	});
-
-	res.status(200).json(crates);
+	// get album count
+	const cratesEnhanced = await getAlbumCount(crates);
+	res.status(200).json(cratesEnhanced);
 }
 
 async function findAlbums(crate_id) {
@@ -25,11 +22,18 @@ async function findAlbums(crate_id) {
 
 module.exports = { findAll };
 
-async function countAlbums(crate_id) {
-	const numAlbums = await knex("crate_album")
-		.where({ crate_id })
-		.countDistinct("album_id")
-		.first();
+async function getAlbumCount(crates) {
+	const updatedCrates = await Promise.all(
+		crates.map(async (crate) => {
+			const album_count = await knex("crate_album")
+				.where({ crate_id: crate.id })
+				.countDistinct("album_id as album_count")
+				.first();
 
-	return numAlbums["count(distinct `album_id`)"];
+			const updatedCrate = { ...crate, ...album_count };
+			return updatedCrate;
+		})
+	);
+
+	return updatedCrates;
 }
