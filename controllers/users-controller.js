@@ -49,11 +49,19 @@ async function create(req, res) {
 
 		await knex("user").insert(newUser);
 
-		// return new user
+		// find new user_id
 		const addedUser = await knex("user")
 			.where({ access_token })
 			.select("id")
 			.first();
+
+		// create default crate
+		await knex("crate").insert({
+			user_id: addedUser.id,
+			name: "my first crate",
+			empty_crate: true,
+			default_crate: true,
+		});
 
 		res.status(201).json(addedUser);
 	} catch (error) {
