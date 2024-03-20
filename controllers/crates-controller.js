@@ -4,7 +4,9 @@ const uniqid = require("uniqid");
 async function findAll(req, res) {
 	const user_id = req.params.user_id;
 
-	const crates = await knex("crate").where({ user_id });
+	const crates = await knex("crate")
+		.where({ user_id })
+		.orderBy("created_at", "asc");
 
 	if (!crates) {
 		return res.status(404);
