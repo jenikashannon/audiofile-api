@@ -1,4 +1,5 @@
 const knex = require("knex")(require("../knexfile"));
+const uniqid = require("uniqid");
 
 async function findAll(req, res) {
 	const user_id = req.params.user_id;
@@ -14,13 +15,30 @@ async function findAll(req, res) {
 	res.status(200).json(cratesEnhanced);
 }
 
+async function create(req, res) {
+	newId = uniqid();
+
+	const newCrate = {
+		id: newId,
+		...req.body,
+	};
+
+	await knex("crate").insert(newCrate);
+
+	// get created crate
+	const createdCrate = await await knex("crate").where({ id: newId }).first();
+	console.log(createdCrate);
+
+	res.status(201).json(createdCrate);
+}
+
 async function findAlbums(crate_id) {
 	const albums = await knex("crates_albums")
 		.where({ crate_id })
 		.distinct("album_id");
 }
 
-module.exports = { findAll };
+module.exports = { findAll, create };
 
 async function getAlbumCount(crates) {
 	const updatedCrates = await Promise.all(

@@ -5,8 +5,7 @@
 exports.up = function (knex) {
 	return knex.schema.createTable("crate_album", (table) => {
 		table
-			.integer("crate_id")
-			.unsigned()
+			.string("crate_id")
 			.references("crate.id")
 			.onUpdate("CASCADE")
 			.onDelete("CASCADE");

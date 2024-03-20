@@ -4,7 +4,7 @@
  */
 exports.up = function (knex) {
 	return knex.schema.createTable("crate", (table) => {
-		table.increments("id").primary();
+		table.string("id").primary().notNullable();
 		table
 			.integer("user_id")
 			.unsigned()
@@ -15,7 +15,7 @@ exports.up = function (knex) {
 		table
 			.string("cover_art")
 			.defaultTo("http://localhost:1700/images/crate.svg");
-		table.boolean("empty_crate").notNullable();
+		table.boolean("empty_crate").notNullable().defaultTo(true);
 		table.boolean("default_crate").notNullable().defaultTo(false);
 		table.timestamp("created_at").defaultTo(knex.fn.now());
 		table

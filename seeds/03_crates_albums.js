@@ -7,11 +7,11 @@ exports.seed = async function (knex) {
 	await knex("crate_album").del();
 	await knex("crate_album").insert([
 		{
-			crate_id: 1,
+			crate_id: "asdlfjcj",
 			album_id: "3Dz3wzC43T88VbJCRPDIAP",
 		},
 		{
-			crate_id: 1,
+			crate_id: "asdlfjcj",
 			album_id: "23dKNZpiadggKHrQgHLi3L",
 		},
 	]);
