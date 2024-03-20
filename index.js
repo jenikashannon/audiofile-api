@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use((_req, res, next) => {
-	res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
+	// res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
 	res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT", "CONNECT");
 	res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 	next();
@@ -19,8 +19,8 @@ app.use((_req, res, next) => {
 const spotifyRoutes = require("./routes/spotify-routes.js");
 app.use("/api/spotify", spotifyRoutes);
 
-const userRoutes = require("./routes/user-routes.js");
-app.use("/api/user", userRoutes);
+const usersRoutes = require("./routes/users-routes.js");
+app.use("/api/users", usersRoutes);
 
 app.listen(PORT, () => {
 	console.log(`listening on port ${PORT}`);
