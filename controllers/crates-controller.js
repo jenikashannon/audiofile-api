@@ -45,8 +45,11 @@ async function findOne(req, res) {
 	const user_id = req.query.user_id;
 
 	try {
-		const crate = await knex("crate").where({ id: crate_id });
-		const albums = await findAlbums(crate_id, user_id); // finish thisssssss
+		const crate = await knex("crate").where({ id: crate_id }).first();
+		const albums = await findAlbums(crate_id, user_id);
+
+		crate.albums = albums;
+
 		res.status(200).json(crate);
 	} catch (error) {
 		console.log(error);
@@ -73,6 +76,8 @@ async function findAlbums(crate_id, user_id) {
 		.distinct("album_id");
 
 	const albums = await spotifyController.getAlbums(albumIds, user_id);
+
+	return albums;
 }
 
 module.exports = { findAll, create, remove, findOne };

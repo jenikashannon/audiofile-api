@@ -103,21 +103,33 @@ async function getAlbums(albumIds, user_id) {
 
 	// max 20 albums at a time, determine number of requests to Spotify required
 	const numRequests = Math.ceil(ids.length / 20);
-	let albums;
+	let albums = [];
 
 	for (i = 0; i < numRequests; i++) {
 		const idString = ids.slice(i * 20, (i + 1) * 20).toString();
-		console.log(idString);
 
 		try {
 			const response = await axios.get(`${baseUrl}/albums?ids=${idString}`, {
 				headers: { Authorization: `Bearer ${access_token}` },
 			});
-			console.log(response.data);
+
+			response.data.albums.forEach((album) => {
+				albums.push({
+					id: album.id,
+					artists: album.artists,
+					images: album.images,
+					name: album.name,
+					release_date: album.release_date,
+					tracks: album.tracks,
+					uri: album.uri,
+				});
+			});
 		} catch (error) {
 			console.log(error);
 		}
 	}
+
+	return albums;
 }
 
 module.exports = {
