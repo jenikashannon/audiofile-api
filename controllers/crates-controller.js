@@ -41,11 +41,12 @@ async function findAll(req, res) {
 }
 
 async function findOne(req, res) {
-	const id = req.params.crate_id;
+	const crate_id = req.params.crate_id;
+	const user_id = req.query.user_id;
 
 	try {
-		const crate = await knex("crate").where({ id });
-		const albums = await findAlbums(id); // finish thisssssss
+		const crate = await knex("crate").where({ id: crate_id });
+		const albums = await findAlbums(crate_id, user_id); // finish thisssssss
 		res.status(200).json(crate);
 	} catch (error) {
 		console.log(error);
@@ -66,13 +67,12 @@ async function remove(req, res) {
 	}
 }
 
-async function findAlbums(crate_id) {
+async function findAlbums(crate_id, user_id) {
 	const albumIds = await knex("crate_album")
 		.where({ crate_id })
 		.distinct("album_id");
 
-	console.log(albumIds);
-	const albums = await spotifyController.getAlbums(albumIds);
+	const albums = await spotifyController.getAlbums(albumIds, user_id);
 }
 
 module.exports = { findAll, create, remove, findOne };
