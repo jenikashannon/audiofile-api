@@ -31,7 +31,7 @@ async function getAccessToken(code) {
 		// set expires_at
 		const expires_at = Date.now() + expires_in * 1000;
 
-		// get user email
+		// get user email & product
 		const responseUserInfo = await axios.get(`${baseUrl}/me`, {
 			headers: { Authorization: `Bearer ${access_token}` },
 		});
@@ -66,13 +66,13 @@ async function refreshAccessToken(refresh_token, id) {
 				},
 			}
 		);
+
 		const { access_token, expires_in } = response.data;
 		const expires_at = Date.now() + expires_in * 1000;
 
 		// update tokens in database
 		await knex("user").where({ id }).update({ access_token, expires_at });
 
-		// return access token
 		return access_token;
 	} catch (error) {
 		console.log(error);
