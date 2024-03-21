@@ -114,13 +114,36 @@ async function getAlbums(albumIds, user_id) {
 			});
 
 			response.data.albums.forEach((album) => {
+				const tracks = album.tracks.items.map((track) => {
+					const trackArtists = track.artists.map((artist) => {
+						return artist.name;
+					});
+
+					return {
+						name: track.name,
+						artists: trackArtists,
+						duration_ms: track.duration_ms,
+					};
+				});
+
+				const albumArtists = album.artists.map((artist) => {
+					return artist.name;
+				});
+
+				let albumDuration = 0;
+
+				tracks.forEach((track) => {
+					albumDuration += track.duration_ms;
+				});
+
 				albums.push({
 					id: album.id,
-					artists: album.artists,
-					images: album.images,
 					name: album.name,
+					artists: albumArtists,
+					image: album.images[1].url,
 					release_date: album.release_date,
-					tracks: album.tracks,
+					tracks,
+					duration_ms: albumDuration,
 					uri: album.uri,
 				});
 			});
