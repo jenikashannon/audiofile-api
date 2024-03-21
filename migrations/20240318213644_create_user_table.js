@@ -4,7 +4,7 @@
  */
 exports.up = function (knex) {
 	return knex.schema.createTable("user", (table) => {
-		table.increments("id").primary;
+		table.string("id").primary().notNullable();
 		table.string("email").notNullable();
 		table.string("product").notNullable();
 		table.string("access_token", 400).notNullable();

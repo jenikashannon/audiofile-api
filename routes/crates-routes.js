@@ -9,4 +9,6 @@ router
 	.get(cratesController.findAll)
 	.post(cratesController.create);
 
+router.route("/:user_id/:crate_id").delete(cratesController.remove);
+
 module.exports = router;

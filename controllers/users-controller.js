@@ -1,5 +1,6 @@
 const knex = require("knex")(require("../knexfile"));
 const axios = require("axios");
+const uniqid = require("uniqid");
 
 const baseUrl = "https://api.spotify.com/v1";
 const auth = Buffer.from(
@@ -39,7 +40,10 @@ async function create(req, res) {
 		const { email, product } = responseUserInfo.data;
 
 		// create user in database
+		const newUserId = uniqid();
+
 		const newUser = {
+			id: newUserId,
 			email,
 			product,
 			access_token,
@@ -49,22 +53,22 @@ async function create(req, res) {
 
 		await knex("user").insert(newUser);
 
-		// find new user_id
-		const addedUser = await knex("user")
-			.where({ access_token })
-			.select("id")
-			.first();
-
 		// create default crate
+		const newCrateId = uniqid();
+
 		await knex("crate").insert({
-			user_id: addedUser.id,
+			id: newCrateId,
+			user_id: newUserId,
 			name: "my first crate",
 			empty_crate: true,
 			default_crate: true,
 		});
 
-		res.status(201).json(addedUser);
+		console.log({ id: newUserId });
+
+		res.status(201).json({ id: newUserId });
 	} catch (error) {
+		console.log(error);
 		res.status(500);
 	}
 }

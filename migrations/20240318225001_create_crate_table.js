@@ -6,11 +6,11 @@ exports.up = function (knex) {
 	return knex.schema.createTable("crate", (table) => {
 		table.string("id").primary().notNullable();
 		table
-			.integer("user_id")
-			.unsigned()
+			.string("user_id")
 			.references("user.id")
 			.onUpdate("CASCADE")
-			.onDelete("CASCADE");
+			.onDelete("CASCADE")
+			.notNullable();
 		table.string("name").notNullable();
 		table
 			.string("cover_art")

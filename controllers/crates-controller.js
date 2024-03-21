@@ -25,13 +25,30 @@ async function create(req, res) {
 		...req.body,
 	};
 
-	await knex("crate").insert(newCrate);
+	try {
+		await knex("crate").insert(newCrate);
 
-	// get created crate
-	const createdCrate = await await knex("crate").where({ id: newId }).first();
-	console.log(createdCrate);
+		// get created crate
+		const createdCrate = await await knex("crate").where({ id: newId }).first();
 
-	res.status(201).json(createdCrate);
+		res.status(201).json(createdCrate);
+	} catch (error) {
+		console.log(error);
+		res.staus(500).json(`Error creating crate`);
+	}
+}
+
+async function remove(req, res) {
+	const crate_id = req.params.crate_id;
+
+	try {
+		await knex("crate").where({ id: crate_id }).del();
+
+		res.status(204).json(`Crate deleted successfully.`);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json(`Error deleting crate with id: ${crate_id}`);
+	}
 }
 
 async function findAlbums(crate_id) {
@@ -40,7 +57,9 @@ async function findAlbums(crate_id) {
 		.distinct("album_id");
 }
 
-module.exports = { findAll, create };
+module.exports = { findAll, create, remove };
+
+////// utility functions //////
 
 async function getAlbumCount(crates) {
 	const updatedCrates = await Promise.all(
