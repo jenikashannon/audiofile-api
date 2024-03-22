@@ -9,6 +9,7 @@ router.route("/").get(cratesController.findAll).post(cratesController.create);
 router
 	.route("/:crate_id")
 	.get(cratesController.findOne)
-	.delete(cratesController.remove);
+	.delete(cratesController.remove)
+	.post(cratesController.addAlbum);
 
 module.exports = router;

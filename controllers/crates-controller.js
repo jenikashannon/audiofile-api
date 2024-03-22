@@ -2,6 +2,18 @@ const knex = require("knex")(require("../knexfile"));
 const uniqid = require("uniqid");
 const spotifyController = require("./spotify-controller");
 
+async function addAlbum(req, res) {
+	const { album_id } = req.body;
+	const crate_id = req.params.crate_id;
+
+	try {
+		await knex("crate_album").insert({ crate_id, album_id });
+		res.status(201).json(`Album added, successfully`);
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 async function create(req, res) {
 	const newId = uniqid();
 
@@ -79,7 +91,7 @@ async function findAlbums(crate_id, user_id) {
 	return albums;
 }
 
-module.exports = { findAll, create, remove, findOne };
+module.exports = { findAll, create, remove, findOne, addAlbum };
 
 ////// utility functions //////
 
