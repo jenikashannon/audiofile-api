@@ -8,31 +8,31 @@ exports.seed = async function (knex) {
 	await knex("crate").insert([
 		{
 			id: "asdlfjcj",
-			user_id: 1,
+			user_id: "gr7t11rqlu1nwwk4",
 			name: "baby's first crate",
 			empty_crate: false,
 		},
 		{
 			id: "wasdfjcnd",
-			user_id: 1,
+			user_id: "gr7t11rqlu1nwwk4",
 			name: "secy",
 			empty_crate: false,
 		},
 		{
 			id: "eeeekjancekoaj",
-			user_id: 1,
+			user_id: "gr7t11rqlu1nwwk4",
 			name: "loser",
 			empty_crate: false,
 		},
 		{
 			id: "kljaenneid",
-			user_id: 1,
+			user_id: "gr7t11rqlu1nwwk4",
 			name: "hahahok",
 			empty_crate: false,
 		},
 		{
 			id: "weroioioioejn",
-			user_id: 1,
+			user_id: "gr7t11rqlu1nwwk4",
 			name: "ONE MORE TIME",
 			empty_crate: false,
 		},

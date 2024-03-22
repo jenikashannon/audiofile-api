@@ -97,9 +97,13 @@ async function getAlbums(albumIds, user_id) {
 	const access_token = await getValidToken(user_id);
 
 	// put album ids into an array
-	const ids = albumIds.map((albumId, index) => {
-		return albumId.album_id;
-	});
+	if (typeof albumIds[0] === "string") {
+		ids = albumIds;
+	} else {
+		ids = albumIds.map((albumId) => {
+			return albumId.album_id;
+		});
+	}
 
 	// max 20 albums at a time, determine number of requests to Spotify required
 	const numRequests = Math.ceil(ids.length / 20);
@@ -112,41 +116,8 @@ async function getAlbums(albumIds, user_id) {
 			const response = await axios.get(`${baseUrl}/albums?ids=${idString}`, {
 				headers: { Authorization: `Bearer ${access_token}` },
 			});
-
-			response.data.albums.forEach((album) => {
-				const tracks = album.tracks.items.map((track) => {
-					const trackArtists = track.artists.map((artist) => {
-						return artist.name;
-					});
-
-					return {
-						name: track.name,
-						artists: trackArtists,
-						duration_ms: track.duration_ms,
-					};
-				});
-
-				const albumArtists = album.artists.map((artist) => {
-					return artist.name;
-				});
-
-				let albumDuration = 0;
-
-				tracks.forEach((track) => {
-					albumDuration += track.duration_ms;
-				});
-
-				albums.push({
-					id: album.id,
-					name: album.name,
-					artists: albumArtists,
-					image: album.images[1].url,
-					release_date: album.release_date,
-					tracks,
-					duration_ms: albumDuration,
-					uri: album.uri,
-				});
-			});
+			albums = [...albums, ...formatAlbums(response.data.albums)];
+			console.log(albums);
 		} catch (error) {
 			console.log(error);
 		}
@@ -155,7 +126,77 @@ async function getAlbums(albumIds, user_id) {
 	return albums;
 }
 
+async function search(req, res) {
+	const user_id = req.query.user_id;
+	const term = req.query.term;
+
+	// get user token
+	const access_token = await getValidToken(user_id);
+
+	try {
+		const response = await axios.get(`${baseUrl}/search?q=${term}&type=album`, {
+			headers: { Authorization: `Bearer ${access_token}` },
+		});
+
+		const albumIds = getAlbumIds(response.data.albums.items);
+		const albums = await getAlbums(albumIds, user_id);
+
+		res.status(200).json(albums);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json(`Error searching Spotify.`);
+	}
+}
+
 module.exports = {
 	getAccessToken,
 	getAlbums,
+	search,
 };
+
+function formatAlbums(albums) {
+	const albumsFormatted = albums.map((album) => {
+		const tracks = album.tracks.items.map((track) => {
+			const trackArtists = track.artists.map((artist) => {
+				return artist.name;
+			});
+
+			return {
+				name: track.name,
+				artists: trackArtists,
+				duration_ms: track.duration_ms,
+			};
+		});
+
+		const albumArtists = album.artists.map((artist) => {
+			return artist.name;
+		});
+
+		let albumDuration = 0;
+
+		tracks.forEach((track) => {
+			albumDuration += track.duration_ms;
+		});
+
+		return {
+			id: album.id,
+			name: album.name,
+			artists: albumArtists,
+			image: album.images[1].url,
+			release_date: album.release_date,
+			tracks,
+			duration_ms: albumDuration,
+			uri: album.uri,
+		};
+	});
+
+	return albumsFormatted;
+}
+
+function getAlbumIds(albums) {
+	const albumIds = albums.map((album) => {
+		return album.id;
+	});
+
+	return albumIds;
+}

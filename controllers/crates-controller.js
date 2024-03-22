@@ -3,7 +3,7 @@ const uniqid = require("uniqid");
 const spotifyController = require("./spotify-controller");
 
 async function create(req, res) {
-	newId = uniqid();
+	const newId = uniqid();
 
 	const newCrate = {
 		id: newId,
@@ -25,7 +25,6 @@ async function create(req, res) {
 
 async function findAll(req, res) {
 	const user_id = req.query.user_id;
-	console.log(user_id);
 
 	const crates = await knex("crate")
 		.where({ user_id })
