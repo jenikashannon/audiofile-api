@@ -10,7 +10,8 @@ router
 	.route("/:crate_id")
 	.get(cratesController.findOne)
 	.delete(cratesController.remove)
-	.post(cratesController.addAlbum);
+	.post(cratesController.addAlbum)
+	.patch(cratesController.update);
 
 router.route("/:crate_id/:album_id").delete(cratesController.removeAlbum);
 

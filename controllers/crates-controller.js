@@ -104,7 +104,27 @@ async function removeAlbum(req, res) {
 	}
 }
 
-module.exports = { findAll, create, remove, findOne, addAlbum, removeAlbum };
+async function update(req, res) {
+	const crate_id = req.params.crate_id;
+
+	try {
+		await knex("crate").where({ id: crate_id }).update(req.body);
+		res.status(200).json(`Crate sucessfully updated.`);
+	} catch (error) {
+		res.status(500).json(`Error updating crate name.`);
+		console.log(error);
+	}
+}
+
+module.exports = {
+	findAll,
+	create,
+	remove,
+	findOne,
+	addAlbum,
+	removeAlbum,
+	update,
+};
 
 ////// utility functions //////
 
