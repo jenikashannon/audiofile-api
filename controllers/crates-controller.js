@@ -35,6 +35,16 @@ async function create(req, res) {
 	}
 }
 
+async function findAlbums(crate_id, user_id) {
+	const albumIds = await knex("crate_album")
+		.where({ crate_id })
+		.distinct("album_id");
+
+	const albums = await spotifyController.getAlbums(albumIds, user_id);
+
+	return albums;
+}
+
 async function findAll(req, res) {
 	const user_id = req.query.user_id;
 
@@ -81,17 +91,20 @@ async function remove(req, res) {
 	}
 }
 
-async function findAlbums(crate_id, user_id) {
-	const albumIds = await knex("crate_album")
-		.where({ crate_id })
-		.distinct("album_id");
+async function removeAlbum(req, res) {
+	const crate_id = req.params.crate_id;
+	const album_id = req.params.album_id;
 
-	const albums = await spotifyController.getAlbums(albumIds, user_id);
-
-	return albums;
+	try {
+		await knex("crate_album").where({ crate_id, album_id }).del();
+		res.status(203).json(`Album deleted successfully.`);
+	} catch (error) {
+		console.log(error);
+		res.status(500);
+	}
 }
 
-module.exports = { findAll, create, remove, findOne, addAlbum };
+module.exports = { findAll, create, remove, findOne, addAlbum, removeAlbum };
 
 ////// utility functions //////
 

@@ -12,4 +12,6 @@ router
 	.delete(cratesController.remove)
 	.post(cratesController.addAlbum);
 
+router.route("/:crate_id/:album_id").delete(cratesController.removeAlbum);
+
 module.exports = router;
