@@ -96,28 +96,18 @@ async function getAlbums(albumIds, user_id) {
 	// get user token
 	const access_token = await getValidToken(user_id);
 
-	// put album ids into an array
-	if (typeof albumIds[0] === "string") {
-		ids = albumIds;
-	} else {
-		ids = albumIds.map((albumId) => {
-			return albumId.album_id;
-		});
-	}
-
 	// max 20 albums at a time, determine number of requests to Spotify required
-	const numRequests = Math.ceil(ids.length / 20);
+	const numRequests = Math.ceil(albumIds.length / 20);
 	let albums = [];
 
 	for (i = 0; i < numRequests; i++) {
-		const idString = ids.slice(i * 20, (i + 1) * 20).toString();
+		const idString = albumIds.slice(i * 20, (i + 1) * 20).toString();
 
 		try {
 			const response = await axios.get(`${baseUrl}/albums?ids=${idString}`, {
 				headers: { Authorization: `Bearer ${access_token}` },
 			});
 			albums = [...albums, ...formatAlbums(response.data.albums)];
-			console.log(albums);
 		} catch (error) {
 			console.log(error);
 		}

@@ -35,14 +35,44 @@ async function create(req, res) {
 	}
 }
 
-async function findAlbums(crate_id, user_id) {
+async function findAlbums(crate_id, user_id, type) {
 	const albumIds = await knex("crate_album")
 		.where({ crate_id })
-		.distinct("album_id");
+		.distinct("album_id")
+		.pluck("album_id");
 
 	const albums = await spotifyController.getAlbums(albumIds, user_id);
 
-	return albums;
+	if (type === "full") {
+		return albums;
+	}
+
+	const names = albums.map((album) => {
+		return album.name;
+	});
+
+	let tracks = [];
+	let artists = [];
+
+	albums.forEach((album) => {
+		album.artists.forEach((artist) => {
+			if (!artists.includes(artist)) {
+				artists.push(artist);
+			}
+		});
+
+		album.tracks.forEach((track) => {
+			tracks.push(track.name);
+
+			track.artists.forEach((artist) => {
+				if (!artists.includes(artist)) {
+					artists.push(artist);
+				}
+			});
+		});
+	});
+
+	return { names, tracks, artists };
 }
 
 async function findAll(req, res) {
@@ -56,8 +86,21 @@ async function findAll(req, res) {
 		return res.status(404);
 	}
 
-	// get album count
-	const cratesEnhanced = await getAlbumCount(crates);
+	const cratesEnhanced = await Promise.all(
+		crates.map(async (crate) => {
+			// get album, track, and artist names
+			const {
+				names: albums,
+				tracks,
+				artists,
+			} = await findAlbums(crate.id, user_id);
+
+			const album_count = albums.length;
+
+			return { ...crate, albums, tracks, artists, album_count };
+		})
+	);
+
 	res.status(200).json(cratesEnhanced);
 }
 
@@ -67,7 +110,7 @@ async function findOne(req, res) {
 
 	try {
 		const crate = await knex("crate").where({ id: crate_id }).first();
-		const albums = await findAlbums(crate_id, user_id);
+		const albums = await findAlbums(crate_id, user_id, "full");
 
 		crate.albums = albums;
 
