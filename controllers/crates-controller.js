@@ -37,6 +37,17 @@ async function create(req, res) {
 
 async function findAll(req, res) {
 	const user_id = req.query.user_id;
+	const type = req.query.type;
+
+	if (type === "id") {
+		const crateIds = await knex("crate").where({ user_id }).pluck("id");
+
+		if (!crateIds) {
+			return res.status(404);
+		}
+
+		return res.status(200).json(crateIds);
+	}
 
 	const crates = await knex("crate")
 		.where({ user_id })
