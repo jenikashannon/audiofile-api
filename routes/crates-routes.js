@@ -11,7 +11,8 @@ router
 	.get(cratesController.findOne)
 	.delete(cratesController.remove)
 	.post(cratesController.addAlbum)
-	.patch(cratesController.update);
+	.patch(cratesController.update)
+	.put(cratesController.togglePinned);
 
 router.route("/:crate_id/:album_id").delete(cratesController.removeAlbum);
 

@@ -7,14 +7,14 @@ exports.seed = async function (knex) {
 	await knex("user").del();
 	await knex("user").insert([
 		{
-			id: "gr7t11rqlu1nwwk4",
+			id: "1nmfd34zlu7amjrw",
 			email: "jenikashannon@pm.me",
 			product: "premium",
 			access_token:
-				"BQBPiQdyPCkeLejarvxkM7aJDpwAqdB3Vd32pk0I2dHSbm23E2dqg5K3jUR-OOLKOiYqkquEtVCe4vs2j9GgVnG-H1pXwrWwVzwB-MXTQCBuFbR2LTq34bfe0U88lpfegxoZcla_-zraDtBYXjFqMq_lB0aUFkmxVx1ji-bltgH2NIhSsrYJECwVFQgbpQuDzkgwtZP0feDaVdsIKlq1LRSzYO0IeSMB_K6EtYgUkMVJ2Hpzgdf1krnvTn_eegM_nRu26P2KVwB1sAfVQ_d4z0oTu5D0g7bUXMoO2BK32UEUmv-zCnIoThJlZg",
+				"BQBq6OemI780VJ8lqAnGtLcAEyuBSHFxd-QrkyU6aVbgmUhvP4zwgVxBH700FSZzL-oTJkPJwhlgFRV2WDkEwnrhR5OAyees1PKQ91bS9d0FWCs0NXTZYEoD6bRblDUiGCYHRFl23h97CVYWlQEalUvAoKCu3el22UpgSbO_hEXSp893UjSCnRczxS5MNBl8P2Ithuq0KXgyq5MwtjIhk88qtBIcoGr18gFD0RQptykTaMcDQspg7CR1paVCBb3JdzeACw5x0zn5J270sa6cOwgzfxczDw-hNyvxEhErfhdSZ53jlFjKtsFDHA",
 			refresh_token:
-				"AQBOXj9_WLDcVlFL_QsG9FJQLh74zFSY7Z5K3CVRgmV8jQcRtCtMs0tvDdhP4Ws0P-mD16TOwMC7Fy955XrtUrskLDlgGo2X5432BCmh6_pNCjkXQVXWqaTwRBmrzlADeAg",
-			expires_at: "1711058753853",
+				"AQDreNd1S0LDplQM_WVS8FyrL3f7yzFuw18qd0gvN-XL6P5msgrEyNn0c3Fu-2ztMPtOTyQg4La27p4YkeLFt2XJbFm_motvXxawPdb7wUbnMovTs_NGHyCGUrmQtRnG51k",
+			expires_at: "1711392148333",
 		},
 		{
 			id: 2,
