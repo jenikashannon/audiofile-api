@@ -48,7 +48,18 @@ async function findAll(req, res) {
 			return res.status(404);
 		}
 
-		return res.status(200).json(crateNames);
+		const crateNamesEnhanced = await Promise.all(
+			crateNames.map(async (crate) => {
+				const albumIds = await findAlbums(crate.id, user_id, "ids");
+
+				return {
+					...crate,
+					albumIds,
+				};
+			})
+		);
+
+		return res.status(200).json(crateNamesEnhanced);
 	}
 
 	const crates = await knex("crate")
@@ -180,6 +191,12 @@ async function findAlbums(crate_id, user_id, type) {
 
 	if (type === "full") {
 		return albums;
+	}
+
+	if (type === "ids") {
+		return albums.map((album) => {
+			return album.id;
+		});
 	}
 
 	// extract album, track, and artist names
