@@ -89,7 +89,7 @@ async function findAll(req, res) {
 
 async function findOne(req, res) {
 	const crate_id = req.params.crate_id;
-	const user_id = req.query.user_id;
+	const user_id = req.user_id;
 
 	try {
 		const crate = await knex("crate").where({ id: crate_id }).first();
@@ -153,7 +153,8 @@ async function togglePinned(req, res) {
 
 async function update(req, res) {
 	const crate_id = req.params.crate_id;
-	const { user_id, name } = req.body;
+	const user_id = req.user_id;
+	const { name } = req.body;
 
 	try {
 		await knex("crate").where({ id: crate_id }).update({ name });
