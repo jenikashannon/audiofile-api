@@ -41,7 +41,7 @@ function verifyToken(req, res, next) {
 }
 
 const spotifyRoutes = require("./routes/spotify-routes.js");
-app.use("/api/spotify", spotifyRoutes);
+app.use("/api/spotify", verifyToken, spotifyRoutes);
 
 const usersRoutes = require("./routes/users-routes.js");
 app.use("/api/users", usersRoutes);

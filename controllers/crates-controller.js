@@ -2,8 +2,9 @@ const knex = require("knex")(require("../knexfile"));
 const spotifyController = require("./spotify-controller");
 
 async function addAlbum(req, res) {
-	const { album_id, user_id } = req.body;
+	const { album_id } = req.body;
 	const crate_id = req.params.crate_id;
+	const user_id = req.user_id;
 
 	try {
 		await knex("crate_album").insert({ crate_id, album_id });

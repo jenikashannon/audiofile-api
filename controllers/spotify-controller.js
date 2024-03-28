@@ -75,7 +75,7 @@ async function getAlbums(albumIds, user_id) {
 }
 
 async function search(req, res) {
-	const user_id = req.query.user_id;
+	const user_id = req.user_id;
 	const term = req.query.term;
 
 	// get user token
