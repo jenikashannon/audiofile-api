@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use(verifyToken);
+// app.use(verifyToken);
 
 function verifyToken(req, res, next) {
 	if (!req.headers.authorization) {
@@ -35,6 +36,7 @@ function verifyToken(req, res, next) {
 		next();
 	} catch (error) {
 		res.status(401).send("Invalid auth token");
+		console.log(error);
 	}
 }
 
@@ -45,7 +47,7 @@ const usersRoutes = require("./routes/users-routes.js");
 app.use("/api/users", usersRoutes);
 
 const cratesRoutes = require("./routes/crates-routes.js");
-app.use("/api/crates", cratesRoutes);
+app.use("/api/crates", verifyToken, cratesRoutes);
 
 const authRoutes = require("./routes/auth-routes.js");
 app.use("/api/auth", authRoutes);

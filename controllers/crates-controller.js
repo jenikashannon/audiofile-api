@@ -17,10 +17,10 @@ async function addAlbum(req, res) {
 
 async function create(req, res) {
 	const id = req.body.id;
-	const user_id = req.body.user_id;
+	const user_id = req.user_id;
 
 	try {
-		await knex("crate").insert(req.body);
+		await knex("crate").insert({ ...req.body, user_id });
 
 		updateDefaultCrate(user_id);
 
@@ -35,7 +35,7 @@ async function create(req, res) {
 }
 
 async function findAll(req, res) {
-	const user_id = req.query.user_id;
+	const user_id = req.user_id;
 	const type = req.query.type;
 
 	if (type === "name") {
@@ -132,7 +132,7 @@ async function removeAlbum(req, res) {
 
 async function togglePinned(req, res) {
 	const id = req.params.crate_id;
-
+	console.log(id);
 	try {
 		const crate = await knex("crate").where({ id }).first();
 
