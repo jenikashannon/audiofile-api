@@ -1,5 +1,4 @@
 const knex = require("knex")(require("../knexfile"));
-const uniqid = require("uniqid");
 const spotifyController = require("./spotify-controller");
 
 async function addAlbum(req, res) {

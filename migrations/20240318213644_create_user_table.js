@@ -6,10 +6,11 @@ exports.up = function (knex) {
 	return knex.schema.createTable("user", (table) => {
 		table.string("id").primary().notNullable();
 		table.string("email").notNullable();
-		table.string("product").notNullable();
-		table.string("access_token", 400).notNullable();
-		table.string("refresh_token", 400).notNullable();
-		table.string("expires_at").notNullable();
+		table.string("password").notNullable();
+		table.string("product");
+		table.string("access_token", 400);
+		table.string("refresh_token", 400);
+		table.string("expires_at");
 		table.timestamp("created_at").defaultTo(knex.fn.now());
 		table
 			.timestamp("updated_at")

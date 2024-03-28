@@ -25,6 +25,9 @@ app.use("/api/users", usersRoutes);
 const cratesRoutes = require("./routes/crates-routes.js");
 app.use("/api/crates", cratesRoutes);
 
+const authRoutes = require("./routes/auth-routes.js");
+app.use("/api/auth", authRoutes);
+
 app.listen(PORT, () => {
 	console.log(`listening on port ${PORT}`);
 });
