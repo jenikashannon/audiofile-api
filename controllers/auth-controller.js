@@ -10,16 +10,39 @@ async function addUser(req, res) {
 		return res.status(400).json(`Please enter all fields`);
 	}
 
+	// check to see if user already exists
+	try {
+		userEmails = await knex("user").pluck("email");
+
+		if (userEmails.includes(email.toLowerCase())) {
+			return res.status(400).json(`Email already registered, try logging in`);
+		}
+	} catch (error) {
+		res.status(400).json(`Error registering user: ${error}`);
+	}
+
 	const encryptedPassword = bcrypt.hashSync(password);
 
 	const newUser = {
 		id: uniqid(),
-		email,
+		email: email.toLowerCase(),
 		password: encryptedPassword,
 	};
 
 	try {
 		await knex("user").insert(newUser);
+
+		// create default crate
+		const newCrateId = uniqid();
+
+		await knex("crate").insert({
+			id: newCrateId,
+			user_id: newUser.id,
+			name: "my first crate",
+			empty_crate: true,
+			default_crate: true,
+		});
+
 		res.status(201).json(`New user registered successfully!`);
 	} catch (error) {
 		res.status(400).json(`Failed to register new user: ${error}`);
