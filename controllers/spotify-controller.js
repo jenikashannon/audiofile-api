@@ -50,48 +50,6 @@ async function getAccessToken(code) {
 	}
 }
 
-async function refreshAccessToken(refresh_token, id) {
-	try {
-		const response = await axios.post(
-			`https://accounts.spotify.com/api/token`,
-			{
-				grant_type: "refresh_token",
-				refresh_token: refresh_token,
-				redirect_uri: process.env.REDIRECT_URI,
-			},
-			{
-				headers: {
-					Authorization: `Basic ${auth}`,
-					"content-type": "application/x-www-form-urlencoded",
-				},
-			}
-		);
-
-		const { access_token, expires_in } = response.data;
-		const expires_at = Date.now() + expires_in * 1000;
-
-		// update tokens in database
-		await knex("user").where({ id }).update({ access_token, expires_at });
-
-		return access_token;
-	} catch (error) {
-		console.log(error);
-	}
-}
-
-async function getValidToken(id) {
-	const { access_token, refresh_token, expires_at } = await knex("user")
-		.where({ id })
-		.first();
-
-	// check to see if current access token has expired
-	if (expires_at > Date.now()) {
-		return access_token;
-	}
-
-	return refreshAccessToken(refresh_token, id);
-}
-
 async function getAlbums(albumIds, user_id) {
 	// get user token
 	const access_token = await getValidToken(user_id);
@@ -144,6 +102,10 @@ module.exports = {
 	search,
 };
 
+///////////////////////////////
+////// utility functions //////
+///////////////////////////////
+
 function formatAlbums(albums) {
 	const albumsFormatted = albums.map((album) => {
 		const tracks = album.tracks.items.map((track) => {
@@ -189,4 +151,46 @@ function getAlbumIds(albums) {
 	});
 
 	return albumIds;
+}
+
+async function refreshAccessToken(refresh_token, id) {
+	try {
+		const response = await axios.post(
+			`https://accounts.spotify.com/api/token`,
+			{
+				grant_type: "refresh_token",
+				refresh_token: refresh_token,
+				redirect_uri: process.env.REDIRECT_URI,
+			},
+			{
+				headers: {
+					Authorization: `Basic ${auth}`,
+					"content-type": "application/x-www-form-urlencoded",
+				},
+			}
+		);
+
+		const { access_token, expires_in } = response.data;
+		const expires_at = Date.now() + expires_in * 1000;
+
+		// update tokens in database
+		await knex("user").where({ id }).update({ access_token, expires_at });
+
+		return access_token;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+async function getValidToken(id) {
+	const { access_token, refresh_token, expires_at } = await knex("user")
+		.where({ id })
+		.first();
+
+	// check to see if current access token has expired
+	if (expires_at > Date.now()) {
+		return access_token;
+	}
+
+	return refreshAccessToken(refresh_token, id);
 }

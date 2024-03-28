@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const knex = require("knex")(require("../knexfile"));
 const uniqid = require("uniqid");
 
+const spotifyController = require("../controllers/spotify-controller");
+
 async function addUser(req, res) {
 	const { email, password } = req.body;
 
@@ -14,15 +16,18 @@ async function addUser(req, res) {
 	formattedEmail = email.toLowerCase();
 
 	try {
-		userEmails = await knex("user").pluck("email");
+		const userWithEmail = await knex("user")
+			.where({ email: formattedEmail })
+			.first();
 
-		if (userEmails.includes(formattedEmail)) {
+		if (userWithEmail) {
 			return res.status(400).json(`Email already registered, try logging in`);
 		}
 	} catch (error) {
 		res.status(400).json(`Error registering user: ${error}`);
 	}
 
+	// if new user, create user in database with encrypted pw
 	const encryptedPassword = bcrypt.hashSync(password);
 
 	const newUser = {
@@ -58,21 +63,47 @@ async function login(req, res) {
 		return res.status(400).json(`Please enter all fields`);
 	}
 
+	// fetch user
 	const user = await knex("user").where({ email }).first();
 
 	if (!user) {
 		return res.status(400).json(`Invalid email`);
 	}
 
+	// validate password
 	const isPasswordValid = bcrypt.compareSync(password, user.password);
 
 	if (!isPasswordValid) {
 		return res.status(400).json(`Invalid password`);
 	}
 
+	// generate token
 	const token = jwt.sign({ user_id: user.id }, process.env.JWT_KEY);
 
-	res.status(200).json({ token });
+	// check to see if Spotify authorized
+	const isSpotifyAuthorized = user.refresh_token ? true : false;
+
+	res.status(200).json({ token, isSpotifyAuthorized });
 }
 
-module.exports = { addUser, login };
+async function authorizeSpotify(req, res) {
+	const code = req.query.code;
+	let user_id = "1nmfd34zlu7amjrw";
+
+	try {
+		// authorize with Spotify
+		const { product, access_token, refresh_token, expires_at } =
+			await spotifyController.getAccessToken(code);
+
+		// add tokens to user in database
+		await knex("user")
+			.where({ id: user_id })
+			.update({ product, access_token, refresh_token, expires_at });
+
+		res.status(200).json({ isSpotifyAuthorized: true });
+	} catch (error) {
+		res.status(500).json({ isSpotifyAuthorized: false });
+	}
+}
+
+module.exports = { addUser, login, authorizeSpotify };

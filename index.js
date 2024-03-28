@@ -10,11 +10,33 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use((_req, res, next) => {
+app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT", "CONNECT");
 	res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
 	next();
 });
+
+app.use(verifyToken);
+
+function verifyToken(req, res, next) {
+	if (!req.headers.authorization) {
+		return res.status(401).send("Please login");
+	}
+
+	// Parse the bearer token
+	const authHeader = req.headers.authorization;
+	const authToken = authHeader.split(" ")[1];
+
+	// Verify the token
+	try {
+		const decodedToken = jwt.verify(authToken, process.env.JWT_KEY);
+		req.user_id = decodedToken.user_id;
+		next();
+	} catch (error) {
+		res.status(401).send("Invalid auth token");
+	}
+}
 
 const spotifyRoutes = require("./routes/spotify-routes.js");
 app.use("/api/spotify", spotifyRoutes);
