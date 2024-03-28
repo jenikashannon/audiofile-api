@@ -11,10 +11,12 @@ async function addUser(req, res) {
 	}
 
 	// check to see if user already exists
+	formattedEmail = email.toLowerCase();
+
 	try {
 		userEmails = await knex("user").pluck("email");
 
-		if (userEmails.includes(email.toLowerCase())) {
+		if (userEmails.includes(formattedEmail)) {
 			return res.status(400).json(`Email already registered, try logging in`);
 		}
 	} catch (error) {
@@ -25,7 +27,7 @@ async function addUser(req, res) {
 
 	const newUser = {
 		id: uniqid(),
-		email: email.toLowerCase(),
+		email: formattedEmail,
 		password: encryptedPassword,
 	};
 
@@ -63,6 +65,14 @@ async function login(req, res) {
 	}
 
 	const isPasswordValid = bcrypt.compareSync(password, user.password);
+
+	if (!isPasswordValid) {
+		return res.status(400).json(`Invalid password`);
+	}
+
+	const token = jwt.sign({ user_id: user.id }, process.env.JWT_KEY);
+
+	res.status(200).json({ token });
 }
 
 module.exports = { addUser, login };
