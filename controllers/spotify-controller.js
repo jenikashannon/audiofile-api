@@ -97,6 +97,7 @@ async function search(req, res) {
 }
 
 module.exports = {
+	checkSpotifyAuth,
 	getAccessToken,
 	getAlbums,
 	search,
@@ -179,6 +180,7 @@ async function refreshAccessToken(refresh_token, id) {
 		return access_token;
 	} catch (error) {
 		console.log(error);
+		return null;
 	}
 }
 
@@ -193,4 +195,18 @@ async function getValidToken(id) {
 	}
 
 	return refreshAccessToken(refresh_token, id);
+}
+
+async function checkSpotifyAuth(id) {
+	const { access_token, refresh_token, expires_at } = await knex("user")
+		.where({ id })
+		.first();
+
+	if (!access_token || !refresh_token || !expires_at) {
+		return false;
+	}
+
+	const refresh = await refreshAccessToken(refresh_token, id);
+
+	return refresh ? true : false;
 }

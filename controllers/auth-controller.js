@@ -81,7 +81,7 @@ async function login(req, res) {
 	const token = jwt.sign({ user_id: user.id }, process.env.JWT_KEY);
 
 	// check to see if Spotify authorized
-	const isSpotifyAuthorized = user.refresh_token ? true : false;
+	const isSpotifyAuthorized = await spotifyController.checkSpotifyAuth(user.id);
 
 	res.status(200).json({ token, isSpotifyAuthorized });
 }
