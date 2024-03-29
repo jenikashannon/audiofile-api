@@ -92,8 +92,6 @@ async function authorizeSpotify(req, res) {
 		const { product, access_token, refresh_token, expires_at } =
 			await spotifyController.getAccessToken(code);
 
-		// console.log(product, access_token);
-
 		// add tokens to user in database
 		await knex("user")
 			.where({ id: user_id })
