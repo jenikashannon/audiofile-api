@@ -1,7 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
+
+const jwtMiddleware = require("./middleware/jwt-middleware.js");
+const spotiftMiddleware = require("./middleware/spotify-middleware.js");
 
 const app = express();
 
@@ -18,36 +20,24 @@ app.use((req, res, next) => {
 	next();
 });
 
-// app.use(verifyToken);
-
-function verifyToken(req, res, next) {
-	if (!req.headers.authorization) {
-		return res.status(401).send("Please login");
-	}
-
-	// Parse the bearer token
-	const authHeader = req.headers.authorization;
-	const authToken = authHeader.split(" ")[1];
-
-	// Verify the token
-	try {
-		const decodedToken = jwt.verify(authToken, process.env.JWT_KEY);
-		req.user_id = decodedToken.user_id;
-		next();
-	} catch (error) {
-		res.status(401).send("Invalid auth token");
-		console.log(error);
-	}
-}
-
 const spotifyRoutes = require("./routes/spotify-routes.js");
-app.use("/api/spotify", verifyToken, spotifyRoutes);
+app.use(
+	"/api/spotify",
+	jwtMiddleware.verifyToken,
+	spotiftMiddleware.verifySpotifyAuth,
+	spotifyRoutes
+);
 
 const usersRoutes = require("./routes/users-routes.js");
 app.use("/api/users", usersRoutes);
 
 const cratesRoutes = require("./routes/crates-routes.js");
-app.use("/api/crates", verifyToken, cratesRoutes);
+app.use(
+	"/api/crates",
+	jwtMiddleware.verifyToken,
+	spotiftMiddleware.verifySpotifyAuth,
+	cratesRoutes
+);
 
 const authRoutes = require("./routes/auth-routes.js");
 app.use("/api/auth", authRoutes);

@@ -80,29 +80,27 @@ async function login(req, res) {
 	// generate token
 	const token = jwt.sign({ user_id: user.id }, process.env.JWT_KEY);
 
-	// check to see if Spotify authorized
-	const isSpotifyAuthorized = await spotifyController.checkSpotifyAuth(user.id);
-
-	res.status(200).json({ token, isSpotifyAuthorized });
+	res.status(200).json({ token });
 }
 
 async function authorizeSpotify(req, res) {
 	const code = req.query.code;
-	let user_id = "1nmfd34zlu7amjrw";
+	const user_id = req.user_id;
 
 	try {
 		// authorize with Spotify
 		const { product, access_token, refresh_token, expires_at } =
 			await spotifyController.getAccessToken(code);
 
+		// console.log(product, access_token);
+
 		// add tokens to user in database
 		await knex("user")
 			.where({ id: user_id })
 			.update({ product, access_token, refresh_token, expires_at });
-
-		res.status(200).json({ isSpotifyAuthorized: true });
+		res.status(200).json("Spotify authorized!");
 	} catch (error) {
-		res.status(500).json({ isSpotifyAuthorized: false });
+		res.status(400).json(`Error with user auth codes`);
 	}
 }
 

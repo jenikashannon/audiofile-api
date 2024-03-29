@@ -24,11 +24,10 @@ async function getAccessToken(code) {
 				},
 			}
 		);
-
 		const { access_token, refresh_token, expires_in } =
 			responseAccessToken.data;
 
-		// set expires_at
+		// // set expires_at
 		const expires_at = Date.now() + expires_in * 1000;
 
 		// get user email & product
@@ -46,7 +45,7 @@ async function getAccessToken(code) {
 			product,
 		};
 	} catch (error) {
-		console.log(error);
+		console.log(error.response.data);
 	}
 }
 
@@ -179,7 +178,6 @@ async function refreshAccessToken(refresh_token, id) {
 
 		return access_token;
 	} catch (error) {
-		console.log(error);
 		return null;
 	}
 }
@@ -201,12 +199,9 @@ async function checkSpotifyAuth(id) {
 	const { access_token, refresh_token, expires_at } = await knex("user")
 		.where({ id })
 		.first();
-
 	if (!access_token || !refresh_token || !expires_at) {
 		return false;
 	}
-
 	const refresh = await refreshAccessToken(refresh_token, id);
-
 	return refresh ? true : false;
 }

@@ -133,7 +133,7 @@ async function removeAlbum(req, res) {
 
 async function togglePinned(req, res) {
 	const id = req.params.crate_id;
-	console.log(id);
+
 	try {
 		const crate = await knex("crate").where({ id }).first();
 
