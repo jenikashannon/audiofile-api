@@ -73,15 +73,12 @@ async function findAll(req, res) {
 	// get album, track, and artist names for each crate
 	const cratesEnhanced = await Promise.all(
 		crates.map(async (crate) => {
-			const {
-				albumNames: albums,
-				tracks,
-				artists,
-			} = await findAlbums(crate.id, user_id);
+			const albums = await findAlbums(crate.id, user_id, "full");
 
+			console.log(albums);
 			const album_count = albums.length;
 
-			return { ...crate, albums, tracks, artists, album_count };
+			return { ...crate, albums, album_count };
 		})
 	);
 
