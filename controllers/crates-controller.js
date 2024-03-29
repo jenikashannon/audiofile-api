@@ -39,7 +39,6 @@ async function findAll(req, res) {
 	const user_id = req.user_id;
 	const type = req.query.type;
 
-	console.log(type);
 	const crateIds = await knex("crate")
 		.pluck("id")
 		.where({ user_id })
@@ -221,8 +220,13 @@ async function getOneCrate(crate_id, user_id, type) {
 
 		crate.album_count = albums.length;
 
-		if (type === "ids") {
-			return { id: crate.id, name: crate.name, albumIds: albums };
+		if (type === "album_ids") {
+			return {
+				id: crate.id,
+				name: crate.name,
+				albumIds: albums,
+				album_count: crate.album_count,
+			};
 		}
 
 		return crate;
