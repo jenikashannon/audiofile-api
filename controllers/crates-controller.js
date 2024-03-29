@@ -39,50 +39,24 @@ async function findAll(req, res) {
 	const user_id = req.user_id;
 	const type = req.query.type;
 
-	if (type === "name") {
-		const crateNames = await knex("crate")
-			.where({ user_id })
-			.select("id", "name");
-
-		if (!crateNames) {
-			return res.status(404);
-		}
-
-		const crateNamesEnhanced = await Promise.all(
-			crateNames.map(async (crate) => {
-				const albumIds = await findAlbums(crate.id, user_id, "ids");
-
-				return {
-					...crate,
-					albumIds,
-				};
-			})
-		);
-
-		return res.status(200).json(crateNamesEnhanced);
-	}
-
-	const crates = await knex("crate")
+	console.log(type);
+	const crateIds = await knex("crate")
+		.pluck("id")
 		.where({ user_id })
 		.orderBy("created_at", "asc");
 
-	if (!crates) {
+	if (!crateIds) {
 		return res.status(404);
 	}
 
 	// get album, track, and artist names for each crate
-	const cratesEnhanced = await Promise.all(
-		crates.map(async (crate) => {
-			const albums = await findAlbums(crate.id, user_id, "full");
-
-			console.log(albums);
-			const album_count = albums.length;
-
-			return { ...crate, albums, album_count };
+	const crates = await Promise.all(
+		crateIds.map(async (crateId) => {
+			return await getOneCrate(crateId, user_id, type);
 		})
 	);
 
-	res.status(200).json(cratesEnhanced);
+	res.status(200).json(crates);
 }
 
 async function findOne(req, res) {
@@ -90,10 +64,7 @@ async function findOne(req, res) {
 	const user_id = req.user_id;
 
 	try {
-		const crate = await knex("crate").where({ id: crate_id }).first();
-		const albums = await findAlbums(crate_id, user_id, "full");
-
-		crate.albums = albums;
+		const crate = await getOneCrate(crate_id, user_id);
 
 		res.status(200).json(crate);
 	} catch (error) {
@@ -187,15 +158,13 @@ async function findAlbums(crate_id, user_id, type) {
 
 	const albums = await spotifyController.getAlbums(albumIds, user_id);
 
-	if (type === "full") {
-		return albums;
-	}
-
 	if (type === "ids") {
 		return albums.map((album) => {
 			return album.id;
 		});
 	}
+
+	return albums;
 
 	// extract album, track, and artist names
 	const albumNames = albums.map((album) => {
@@ -238,5 +207,26 @@ async function updateDefaultCrate(user_id) {
 		await knex("crate")
 			.where({ default_crate: true, user_id })
 			.update({ default_crate: false });
+	}
+}
+
+async function getOneCrate(crate_id, user_id, type) {
+	try {
+		// get crate from database
+		const crate = await knex("crate").where({ id: crate_id }).first();
+
+		// get album IDs from database and album details from Spotify
+		const albums = await findAlbums(crate_id, user_id, type);
+		crate.albums = albums;
+
+		crate.album_count = albums.length;
+
+		if (type === "ids") {
+			return { id: crate.id, name: crate.name, albumIds: albums };
+		}
+
+		return crate;
+	} catch (error) {
+		console.log(error);
 	}
 }
