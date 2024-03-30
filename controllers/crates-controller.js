@@ -7,6 +7,15 @@ async function addAlbum(req, res) {
 	const user_id = req.user_id;
 
 	try {
+		// check if album is already in crate
+		const albumIds = await knex("crate_album")
+			.where({ crate_id })
+			.pluck("album_id");
+
+		if (albumIds.includes(album_id)) {
+			return res.status(200).json(`Album already in crate`);
+		}
+
 		await knex("crate_album").insert({ crate_id, album_id });
 		updateDefaultCrate(user_id);
 
