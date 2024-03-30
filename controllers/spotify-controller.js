@@ -57,7 +57,7 @@ async function getAlbums(albumIds, user_id) {
 	const numRequests = Math.ceil(albumIds.length / 20);
 	let albums = [];
 
-	for (i = 0; i < numRequests; i++) {
+	for (let i = 0; i < numRequests; i++) {
 		const idString = albumIds.slice(i * 20, (i + 1) * 20).toString();
 
 		try {

@@ -10,9 +10,9 @@ async function addAlbum(req, res) {
 		await knex("crate_album").insert({ crate_id, album_id });
 		updateDefaultCrate(user_id);
 
-		res.status(201).json(`Album added, successfully`);
+		res.status(201).json(`Album added successfully.`);
 	} catch (error) {
-		console.log(error);
+		res.status(400).json(`Trouble adding album.`);
 	}
 }
 
@@ -155,43 +155,14 @@ async function findAlbums(crate_id, user_id, type) {
 		.distinct("album_id")
 		.pluck("album_id");
 
-	const albums = await spotifyController.getAlbums(albumIds, user_id);
-
-	if (type === "ids") {
-		return albums.map((album) => {
-			return album.id;
-		});
+	if (type === "album_ids") {
+		return albumIds;
 	}
 
+	const albums = await spotifyController.getAlbums(albumIds, user_id);
+	// console.log(albums.length);
+
 	return albums;
-
-	// extract album, track, and artist names
-	const albumNames = albums.map((album) => {
-		return album.name;
-	});
-
-	let tracks = [];
-	let artists = [];
-
-	albums.forEach((album) => {
-		album.artists.forEach((artist) => {
-			if (!artists.includes(artist)) {
-				artists.push(artist);
-			}
-		});
-
-		album.tracks.forEach((track) => {
-			tracks.push(track.name);
-
-			track.artists.forEach((artist) => {
-				if (!artists.includes(artist)) {
-					artists.push(artist);
-				}
-			});
-		});
-	});
-
-	return { albumNames, tracks, artists };
 }
 
 async function updateDefaultCrate(user_id) {
@@ -228,7 +199,6 @@ async function getOneCrate(crate_id, user_id, type) {
 				album_count: crate.album_count,
 			};
 		}
-
 		return crate;
 	} catch (error) {
 		console.log(error);
