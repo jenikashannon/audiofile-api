@@ -29,6 +29,10 @@ async function create(req, res) {
 	const id = req.body.id;
 	const user_id = req.user_id;
 
+	if (!req.body.name) {
+		return res.status(400).json(`Please name your crate.`);
+	}
+
 	try {
 		await knex("crate").insert({ ...req.body, user_id });
 
@@ -83,14 +87,13 @@ async function findOne(req, res) {
 
 async function remove(req, res) {
 	const crate_id = req.params.crate_id;
-
 	try {
 		await knex("crate").where({ id: crate_id }).del();
 
-		res.status(204).json(`Crate deleted successfully.`);
+		res.status(200).json(`Crate permanently deleted.`);
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(`Error deleting crate with id: ${crate_id}`);
+		res.status(500).json(`Error deleting crate.`);
 	}
 }
 
@@ -100,10 +103,11 @@ async function removeAlbum(req, res) {
 
 	try {
 		await knex("crate_album").where({ crate_id, album_id }).del();
-		res.status(203).json(`Album deleted successfully.`);
+
+		res.status(203).json(`Album(s) removed successfully.`);
 	} catch (error) {
 		console.log(error);
-		res.status(500);
+		res.status(500).json(`Problem removing album.`);
 	}
 }
 
@@ -114,17 +118,17 @@ async function togglePinned(req, res) {
 		const crate = await knex("crate").where({ id }).first();
 
 		if (!crate) {
-			return res.status(400).json(`Crate not found`);
+			return res.status(400).json(`Crate not found.`);
 		}
 
 		await knex("crate")
 			.where({ id })
 			.update({ pinned_crate: !crate.pinned_crate });
 
-		res.status(200).json("Pin status toggled");
+		res.status(200).json("Crate pinned.");
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(`Error toggling pin status`);
+		res.status(500).json(`Error pinning crate.`);
 	}
 }
 
@@ -133,12 +137,18 @@ async function update(req, res) {
 	const user_id = req.user_id;
 	const { name } = req.body;
 
+	if (!name) {
+		return res.status(400).json(`Please name your crate.`);
+	}
+
 	try {
 		await knex("crate").where({ id: crate_id }).update({ name });
+
 		updateDefaultCrate(user_id);
-		res.status(200).json(`Crate sucessfully updated.`);
+
+		res.status(200).json(`Crate renamed sucessfully.`);
 	} catch (error) {
-		res.status(500).json(`Error updating crate name.`);
+		res.status(500).json(`Error renaming crate.`);
 		console.log(error);
 	}
 }

@@ -96,6 +96,7 @@ async function authorizeSpotify(req, res) {
 		await knex("user")
 			.where({ id: user_id })
 			.update({ product, access_token, refresh_token, expires_at });
+
 		res.status(200).json("Spotify authorized!");
 	} catch (error) {
 		res.status(400).json(`Error with user auth codes`);

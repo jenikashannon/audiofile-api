@@ -9,13 +9,24 @@ exports.seed = async function (knex) {
 		{
 			id: "1nmfd34zlu7amjrw",
 			email: "jenikashannon@pm.me",
-			password: "passpass",
+			password: "$2a$10$ZWpHp99kXz9sibhVY8WnHOOUrUB9MntnpNlVMJ9NHuNF.RIx2uiqO",
 			product: "premium",
 			access_token:
-				"BQBq6OemI780VJ8lqAnGtLcAEyuBSHFxd-QrkyU6aVbgmUhvP4zwgVxBH700FSZzL-oTJkPJwhlgFRV2WDkEwnrhR5OAyees1PKQ91bS9d0FWCs0NXTZYEoD6bRblDUiGCYHRFl23h97CVYWlQEalUvAoKCu3el22UpgSbO_hEXSp893UjSCnRczxS5MNBl8P2Ithuq0KXgyq5MwtjIhk88qtBIcoGr18gFD0RQptykTaMcDQspg7CR1paVCBb3JdzeACw5x0zn5J270sa6cOwgzfxczDw-hNyvxEhErfhdSZ53jlFjKtsFDHA",
+				"BQBLPQIPZGV0fBD1bNdhzTxHzKsFcjwmmMf0NqxtVUJKK-RPg5P7_HrFknOiu61_uGc1ohcTJnsKki0fo9yECnQHISpZftP3ngZt3gdw7ZR2kTD8ScklbHNkdc7q1o-xzwNvXR5vIHYuWttVBKOGzEuV5Ah_BnITLrqYAhcQ5Skat8TlIxZ4IUEch2yFEhJcANzedQgB0hzuvkAbrjQfGUO6nDlaJGbu7o4Dt0ZMKzP-IP2RYCjppv8ATpwoSMC70iq8pFB1ExeEio6N_fesjNP6ehr3VHW11pleJiujOvi0GTIi0gh0KX7vAg",
 			refresh_token:
-				"AQDreNd1S0LDplQM_WVS8FyrL3f7yzFuw18qd0gvN-XL6P5msgrEyNn0c3Fu-2ztMPtOTyQg4La27p4YkeLFt2XJbFm_motvXxawPdb7wUbnMovTs_NGHyCGUrmQtRnG51k",
-			expires_at: "1711392148333",
+				"AQBuz-0tc9m7WqvZwi1xkmNZc-1Nd7A7F6RmD0YnJEvH_PvjPmDtoAYhZWLqhZCfSMjL4PhGv6P86S4AN-x5iPWMGWbWi8hvg3PwZ7KWADXXkh7cq79kQf4ehpMrgG16ZP0",
+			expires_at: "1711841051727",
+		},
+		{
+			id: "1nmfdnhjlueo29e4",
+			email: "user@example.com",
+			password: "$2a$10$tydGX8yHSBYNWqZWoliY8O4A/NuyewXPpUVz2t97JC9/ZNefTAyl2",
+			product: "premium",
+			access_token:
+				"BQBLPQIPZGV0fBD1bNdhzTxHzKsFcjwmmMf0NqxtVUJKK-RPg5P7_HrFknOiu61_uGc1ohcTJnsKki0fo9yECnQHISpZftP3ngZt3gdw7ZR2kTD8ScklbHNkdc7q1o-xzwNvXR5vIHYuWttVBKOGzEuV5Ah_BnITLrqYAhcQ5Skat8TlIxZ4IUEch2yFEhJcANzedQgB0hzuvkAbrjQfGUO6nDlaJGbu7o4Dt0ZMKzP-IP2RYCjppv8ATpwoSMC70iq8pFB1ExeEio6N_fesjNP6ehr3VHW11pleJiujOvi0GTIi0gh0KX7vAg",
+			refresh_token:
+				"AQBuz-0tc9m7WqvZwi1xkmNZc-1Nd7A7F6RmD0YnJEvH_PvjPmDtoAYhZWLqhZCfSMjL4PhGv6P86S4AN-x5iPWMGWbWi8hvg3PwZ7KWADXXkh7cq79kQf4ehpMrgG16ZP0",
+			expires_at: "1711841051727",
 		},
 	]);
 };
