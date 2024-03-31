@@ -56,10 +56,12 @@ async function getAlbums(albumIds, user_id) {
 	// max 20 albums at a time, determine number of requests to Spotify required
 	const numRequests = Math.ceil(albumIds.length / 20);
 	let albums = [];
+	let albumsSaved = [];
 
 	for (let i = 0; i < numRequests; i++) {
 		const idString = albumIds.slice(i * 20, (i + 1) * 20).toString();
 
+		// get albums
 		try {
 			const response = await axios.get(`${baseUrl}/albums?ids=${idString}`, {
 				headers: { Authorization: `Bearer ${access_token}` },
@@ -68,7 +70,24 @@ async function getAlbums(albumIds, user_id) {
 		} catch (error) {
 			console.log(error);
 		}
+
+		// determine which ones are saved
+		try {
+			const response = await axios.get(
+				`${baseUrl}/me/albums/contains?ids=${idString}`,
+				{
+					headers: { Authorization: `Bearer ${access_token}` },
+				}
+			);
+			albumsSaved = [...albumsSaved, ...response.data];
+		} catch (error) {
+			console.log(error);
+		}
 	}
+
+	albums.forEach((album, index) => {
+		album.is_saved = albumsSaved[index];
+	});
 
 	return albums;
 }
@@ -92,6 +111,29 @@ async function saveAlbum(req, res) {
 		return res.status(200).json(`Album saved to your Spotify library.`);
 	} catch (error) {
 		res.status(400).json(`Error saving album.`);
+	}
+}
+
+async function removeAlbum(req, res) {
+	const { user_id } = req;
+	const { album_id } = req.query;
+
+	// get user token
+	const access_token = await getValidToken(user_id);
+
+	try {
+		await axios.delete(
+			`${baseUrl}/me/albums?ids=${album_id}`,
+			{},
+			{
+				headers: { Authorization: `Bearer ${access_token}` },
+			}
+		);
+
+		return res.status(200).json(`Album removed from your Spotify library.`);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json(`Error removing album.`);
 	}
 }
 
@@ -122,6 +164,7 @@ module.exports = {
 	getAccessToken,
 	getAlbums,
 	saveAlbum,
+	removeAlbum,
 	search,
 };
 
