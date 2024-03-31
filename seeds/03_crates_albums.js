@@ -36,5 +36,7 @@ exports.seed = async function (knex) {
 		{ crate_id: "luah0cr6", album_id: "5wtE5aLX5r7jOosmPhJhhk" },
 		{ crate_id: "luah0cr6", album_id: "3RqO05jxT9YYgNtMdQmo8Z" },
 		{ crate_id: "luah0cr6", album_id: "2ODvWsOgouMbaA5xf0RkJe" },
+		{ crate_id: "lueomqz4", album_id: "2jgqxqo8mZ3bSCjic8RohQ" },
+		{ crate_id: "lueomqz4", album_id: "3Dz3wzC43T88VbJCRPDIAP" },
 	]);
 };

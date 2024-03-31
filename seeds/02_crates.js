@@ -33,5 +33,14 @@ exports.seed = async function (knex) {
 			empty_crate: 1,
 			pinned_crate: 0,
 		},
+		{
+			id: "lueomqz4",
+			user_id: "1nmfdnhjlueo29e4",
+			name: "hear jenika sing & rap",
+			cover_art: "http://localhost:1700/images/crate.svg",
+			default_crate: 0,
+			empty_crate: 0,
+			pinned_crate: 0,
+		},
 	]);
 };

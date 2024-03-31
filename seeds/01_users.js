@@ -8,7 +8,7 @@ exports.seed = async function (knex) {
 	await knex("user").insert([
 		{
 			id: "1nmfd34zlu7amjrw",
-			email: "jenikashannon@pm.me",
+			email: "demo@example.com",
 			password: "$2a$10$ZWpHp99kXz9sibhVY8WnHOOUrUB9MntnpNlVMJ9NHuNF.RIx2uiqO",
 			product: "premium",
 			access_token:

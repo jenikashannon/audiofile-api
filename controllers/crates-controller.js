@@ -179,7 +179,6 @@ async function findAlbums(crate_id, user_id, type) {
 	}
 
 	const albums = await spotifyController.getAlbums(albumIds, user_id);
-	// console.log(albums.length);
 
 	return albums;
 }
