@@ -7,12 +7,21 @@ exports.seed = async function (knex) {
 	await knex("crate").del();
 	await knex("crate").insert([
 		{
+			id: "lueomqz424",
+			user_id: "1nmfd34zlu7amjrw",
+			name: "hear jenika sing & rap",
+			cover_art: "http://localhost:1700/images/crate.svg",
+			default_crate: 0,
+			empty_crate: 0,
+			pinned_crate: 0,
+		},
+		{
 			id: "1nmfd34zlu7amjsa",
 			user_id: "1nmfd34zlu7amjrw",
 			name: "2019 obsessions.",
 			cover_art: "http://localhost:1700/images/crate.svg",
 			default_crate: 0,
-			empty_crate: 1,
+			empty_crate: 0,
 			pinned_crate: 0,
 		},
 		{
@@ -21,7 +30,7 @@ exports.seed = async function (knex) {
 			name: "2020 obsessions.",
 			cover_art: "http://localhost:1700/images/crate.svg",
 			default_crate: 0,
-			empty_crate: 1,
+			empty_crate: 0,
 			pinned_crate: 0,
 		},
 		{
@@ -30,8 +39,8 @@ exports.seed = async function (knex) {
 			name: "pinned crate",
 			cover_art: "http://localhost:1700/images/crate.svg",
 			default_crate: 0,
-			empty_crate: 1,
-			pinned_crate: 0,
+			empty_crate: 0,
+			pinned_crate: 1,
 		},
 		{
 			id: "lueomqz4",
