@@ -72,17 +72,9 @@ async function getAlbums(albumIds, user_id) {
 		}
 
 		// determine which ones are saved
-		try {
-			const response = await axios.get(
-				`${baseUrl}/me/albums/contains?ids=${idString}`,
-				{
-					headers: { Authorization: `Bearer ${access_token}` },
-				}
-			);
-			albumsSaved = [...albumsSaved, ...response.data];
-		} catch (error) {
-			console.log(error);
-		}
+		const albumsSavedRequest = await getAlbumSaveSatus(idString, user_id);
+
+		albumsSaved = [...albumsSaved, ...albumsSavedRequest];
 	}
 
 	albums.forEach((album, index) => {
@@ -266,4 +258,23 @@ async function checkSpotifyAuth(id) {
 	}
 	const refresh = await refreshAccessToken(refresh_token, id);
 	return refresh ? true : false;
+}
+
+async function getAlbumSaveSatus(idString, user_id) {
+	// get user token
+	const access_token = await getValidToken(user_id);
+
+	// determine which albums are saved in user's Spotify library
+	try {
+		const response = await axios.get(
+			`${baseUrl}/me/albums/contains?ids=${idString}`,
+			{
+				headers: { Authorization: `Bearer ${access_token}` },
+			}
+		);
+
+		return response.data;
+	} catch (error) {
+		console.log(error);
+	}
 }
