@@ -18,12 +18,14 @@
 
 <details> <summary>Client</summary> <ul>
 <li><a href="">JavaScript</a></li>
-<li><a href="https://axios-http.com">axios</a></li>
+<li><a href="https://axios-http.com">Axios</a></li>
 <li><a href="https://nodejs.org/en">Node</a></li>
-<li><a href="https://www.php.net/manual/en/function.uniqid.php">uniqid</a></li>
 <li><a href="https://knexjs.org">Knex.js</a></li>
 <li><a href="mysql.com">MySQL</a></li>
 <li><a href="https://expressjs.com">Express</a></li>
+<li><a href="https://www.npmjs.com/package/bcryptjs">bcrypt.js</a></li>
+<li><a href="https://www.npmjs.com/package/jsonwebtoken">jsonwebtoken</a></li>
+<li><a href="https://www.php.net/manual/en/function.uniqid.php">uniqid</a></li>
 </ul> </details>
 
 ## :toolbox: Getting Started
