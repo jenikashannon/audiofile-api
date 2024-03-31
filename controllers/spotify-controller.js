@@ -35,13 +35,12 @@ async function getAccessToken(code) {
 			headers: { Authorization: `Bearer ${access_token}` },
 		});
 
-		const { email, product } = responseUserInfo.data;
+		const { product } = responseUserInfo.data;
 
 		return {
 			access_token,
 			refresh_token,
 			expires_at,
-			email,
 			product,
 		};
 	} catch (error) {
@@ -120,7 +119,6 @@ async function removeAlbum(req, res) {
 
 		return res.status(200).json(`Album removed from your Spotify library.`);
 	} catch (error) {
-		console.log(error);
 		res.status(400).json(`Error removing album.`);
 	}
 }
@@ -142,8 +140,28 @@ async function search(req, res) {
 
 		res.status(200).json(albums);
 	} catch (error) {
-		console.log(error);
-		res.status(500).json(`Error searching Spotify.`);
+		res.status(400).json(`Error searching Spotify.`);
+	}
+}
+
+async function triggerPlayback(uris) {
+	const { user_id } = req;
+
+	// get user token
+	const access_token = await getValidToken(user_id);
+
+	try {
+		await axios.put(
+			`${baseUrl}/me/player/play`,
+			{ uris },
+			{
+				headers: { Authorization: `Bearer ${access_token}` },
+			}
+		);
+
+		res.status(200).json(`Now playing on Spotify.`);
+	} catch (error) {
+		res.status(400).json(`Error playing on Spotify.`);
 	}
 }
 
@@ -154,6 +172,7 @@ module.exports = {
 	saveAlbum,
 	removeAlbum,
 	search,
+	triggerPlayback,
 };
 
 ///////////////////////////////

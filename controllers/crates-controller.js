@@ -44,7 +44,7 @@ async function create(req, res) {
 		res.status(201).json(createdCrate);
 	} catch (error) {
 		console.log(error);
-		res.staus(500).json(`Error creating crate`);
+		res.staus(400).json(`Error creating crate`);
 	}
 }
 
@@ -81,7 +81,7 @@ async function findOne(req, res) {
 		res.status(200).json(crate);
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(`Error retrieving crate.`);
+		res.status(400).json(`Error retrieving crate.`);
 	}
 }
 
@@ -93,7 +93,7 @@ async function remove(req, res) {
 		res.status(200).json(`Crate permanently deleted.`);
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(`Error deleting crate.`);
+		res.status(400).json(`Error deleting crate.`);
 	}
 }
 
@@ -107,7 +107,7 @@ async function removeAlbum(req, res) {
 		res.status(203).json(`Album(s) removed successfully.`);
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(`Problem removing album.`);
+		res.status(400).json(`Problem removing album.`);
 	}
 }
 
@@ -128,7 +128,7 @@ async function togglePinned(req, res) {
 		res.status(200).json("Crate pinned.");
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(`Error pinning crate.`);
+		res.status(400).json(`Error pinning crate.`);
 	}
 }
 
@@ -148,7 +148,7 @@ async function update(req, res) {
 
 		res.status(200).json(`Crate renamed sucessfully.`);
 	} catch (error) {
-		res.status(500).json(`Error renaming crate.`);
+		res.status(400).json(`Error renaming crate.`);
 		console.log(error);
 	}
 }
