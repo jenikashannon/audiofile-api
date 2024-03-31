@@ -122,13 +122,9 @@ async function removeAlbum(req, res) {
 	const access_token = await getValidToken(user_id);
 
 	try {
-		await axios.delete(
-			`${baseUrl}/me/albums?ids=${album_id}`,
-			{},
-			{
-				headers: { Authorization: `Bearer ${access_token}` },
-			}
-		);
+		await axios.delete(`${baseUrl}/me/albums?ids=${album_id}`, {
+			headers: { Authorization: `Bearer ${access_token}` },
+		});
 
 		return res.status(200).json(`Album removed from your Spotify library.`);
 	} catch (error) {
