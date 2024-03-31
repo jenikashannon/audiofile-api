@@ -18,7 +18,6 @@ async function verifyToken(req, res, next) {
 		next();
 	} catch (error) {
 		res.status(401).send("Invalid auth token");
-		console.log(error);
 	}
 }
 

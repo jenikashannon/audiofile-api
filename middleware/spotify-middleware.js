@@ -14,7 +14,7 @@ async function verifySpotifyAuth(req, res, next) {
 		next();
 	} catch (error) {
 		res.status(401).send("error, please try again");
-		console.log(error);
+		// console.log(error);
 	}
 }
 

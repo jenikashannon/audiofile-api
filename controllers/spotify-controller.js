@@ -73,6 +73,28 @@ async function getAlbums(albumIds, user_id) {
 	return albums;
 }
 
+async function saveAlbum(req, res) {
+	const { user_id } = req;
+	const { album_id } = req.query;
+
+	// get user token
+	const access_token = await getValidToken(user_id);
+
+	try {
+		await axios.put(
+			`${baseUrl}/me/albums?ids=${album_id}`,
+			{},
+			{
+				headers: { Authorization: `Bearer ${access_token}` },
+			}
+		);
+
+		return res.status(200).json(`Album saved to your Spotify library.`);
+	} catch (error) {
+		res.status(400).json(`Error saving album.`);
+	}
+}
+
 async function search(req, res) {
 	const user_id = req.user_id;
 	const term = req.query.term;
@@ -99,6 +121,7 @@ module.exports = {
 	checkSpotifyAuth,
 	getAccessToken,
 	getAlbums,
+	saveAlbum,
 	search,
 };
 
