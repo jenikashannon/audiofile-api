@@ -144,15 +144,31 @@ async function search(req, res) {
 	}
 }
 
-async function triggerPlayback(uris) {
+async function triggerPlayback(req, res) {
 	const { user_id } = req;
+	const { uris } = req.body;
+
+	let devices;
 
 	// get user token
 	const access_token = await getValidToken(user_id);
 
+	// // get available devices
+	// try {
+	// 	const response = await axios.get(`${baseUrl}/me/player/devices`, {
+	// 		headers: { Authorization: `Bearer ${access_token}` },
+	// 	});
+
+	// 	devices = response.data.devices;
+	// } catch (error) {
+	// 	console.log(error.response.data);
+	// 	res.status(400);
+	// }
+
+	// console.log(devices);
 	try {
 		await axios.put(
-			`${baseUrl}/me/player/play`,
+			`${baseUrl}/me/player/play?device_id=${devices[0].id}`,
 			{ uris },
 			{
 				headers: { Authorization: `Bearer ${access_token}` },
@@ -161,6 +177,7 @@ async function triggerPlayback(uris) {
 
 		res.status(200).json(`Now playing on Spotify.`);
 	} catch (error) {
+		console.log(error.response.data);
 		res.status(400).json(`Error playing on Spotify.`);
 	}
 }
