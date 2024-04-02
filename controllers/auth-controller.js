@@ -57,7 +57,6 @@ async function addUser(req, res) {
 }
 
 async function login(req, res) {
-	console.log("ran");
 	const { email, password } = req.body;
 
 	if (!email || !password) {

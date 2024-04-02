@@ -148,27 +148,28 @@ async function triggerPlayback(req, res) {
 	const { user_id } = req;
 	const { uris } = req.body;
 
-	let devices;
-
 	// get user token
 	const access_token = await getValidToken(user_id);
 
-	// // get available devices
-	// try {
-	// 	const response = await axios.get(`${baseUrl}/me/player/devices`, {
-	// 		headers: { Authorization: `Bearer ${access_token}` },
-	// 	});
+	let devices;
+	devices = await getDevices(user_id);
 
-	// 	devices = response.data.devices;
-	// } catch (error) {
-	// 	console.log(error.response.data);
-	// 	res.status(400);
-	// }
+	while (
+		devices.length === 0 ||
+		!devices.some((device) => {
+			return device.type === "Smartphone";
+		})
+	) {
+		devices = await getDevices(user_id);
+	}
 
-	// console.log(devices);
+	const device_id = devices.find((device) => {
+		return device.type === "Smartphone";
+	}).id;
+
 	try {
 		await axios.put(
-			`${baseUrl}/me/player/play?device_id=${devices[0].id}`,
+			`${baseUrl}/me/player/play?device_id=${device_id}`,
 			{ uris },
 			{
 				headers: { Authorization: `Bearer ${access_token}` },
@@ -177,7 +178,6 @@ async function triggerPlayback(req, res) {
 
 		res.status(200).json(`Now playing on Spotify.`);
 	} catch (error) {
-		console.log(error.response.data);
 		res.status(400).json(`Error playing on Spotify.`);
 	}
 }
@@ -207,6 +207,7 @@ function formatAlbums(albums) {
 				name: track.name,
 				artists: trackArtists,
 				duration_ms: track.duration_ms,
+				uri: track.uri,
 			};
 		});
 
@@ -312,5 +313,19 @@ async function getAlbumSaveSatus(idString, user_id) {
 		return response.data;
 	} catch (error) {
 		console.log(error);
+	}
+}
+
+async function getDevices(user_id) {
+	const access_token = await getValidToken(user_id);
+
+	try {
+		const response = await axios.get(`${baseUrl}/me/player/devices`, {
+			headers: { Authorization: `Bearer ${access_token}` },
+		});
+
+		return response.data.devices;
+	} catch (error) {
+		console.log(error.response);
 	}
 }
