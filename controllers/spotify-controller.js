@@ -151,8 +151,8 @@ async function triggerPlayback(req, res) {
 	// get user token
 	const access_token = await getValidToken(user_id);
 
-	let devices;
-	devices = await getDevices(user_id);
+	let devices = [];
+	// devices = await getDevices(user_id);
 
 	while (
 		devices.length === 0 ||

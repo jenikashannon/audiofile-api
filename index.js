@@ -39,6 +39,8 @@ app.use(
 const authRoutes = require("./routes/auth-routes.js");
 app.use("/api/auth", authRoutes);
 
-app.listen(PORT, "192.168.2.143", () => {
+app.listen(PORT, () => {
 	console.log(`listening on port ${PORT}`);
 });
+
+// "192.168.2.140",
