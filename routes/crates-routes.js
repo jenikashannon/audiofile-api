@@ -34,7 +34,8 @@ router
 
 router
 	.route("/:crate_id/photo")
-	.post(upload.single("photo"), cratesController.addPhoto);
+	.post(upload.single("photo"), cratesController.addPhoto)
+	.delete(cratesController.removePhoto);
 
 router.route("/:crate_id/:album_id").delete(cratesController.removeAlbum);
 

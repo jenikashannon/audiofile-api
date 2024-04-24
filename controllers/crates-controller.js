@@ -30,9 +30,7 @@ async function addAlbum(req, res) {
 
 async function addPhoto(req, res) {
 	const crate_id = req.params.crate_id;
-
 	const cover_art = `${publicUrl}/${req.file.filename}`;
-	console.log(cover_art);
 
 	try {
 		await knex("crate").where({ id: crate_id }).update({ cover_art });
@@ -128,6 +126,19 @@ async function removeAlbum(req, res) {
 	}
 }
 
+async function removePhoto(req, res) {
+	const crate_id = req.params.crate_id;
+	const cover_art = `${publicUrl}/crate.svg`;
+
+	try {
+		await knex("crate").where({ id: crate_id }).update({ cover_art });
+		res.status(200).json(`Crate cover photo removed successfully.`);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json(`Trouble removing crate cover photo.`);
+	}
+}
+
 async function togglePinned(req, res) {
 	const id = req.params.crate_id;
 
@@ -178,6 +189,7 @@ module.exports = {
 	addAlbum,
 	addPhoto,
 	removeAlbum,
+	removePhoto,
 	togglePinned,
 	update,
 };
