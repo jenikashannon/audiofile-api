@@ -1,8 +1,24 @@
 const knex = require("knex")(require("../knexfile"));
 const spotifyController = require("./spotify-controller");
+const multer = require("multer");
 
-const fs = require("fs");
+const pathToPublic = "./public/images/";
 const publicUrl = "http://localhost:1700/images";
+
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, pathToPublic);
+	},
+
+	filename: function (req, file, cb) {
+		const fileName = req.body.id;
+		const fileExt = file.mimetype.split("/")[1];
+
+		cb(null, `${fileName}.${fileExt}`);
+	},
+});
+
+const upload = multer({ storage: storage });
 
 async function addAlbum(req, res) {
 	const { album_id } = req.body;
@@ -28,18 +44,6 @@ async function addAlbum(req, res) {
 	}
 }
 
-async function addPhoto(req, res) {
-	const crate_id = req.params.crate_id;
-	const cover_art = `${publicUrl}/${req.file.filename}`;
-
-	try {
-		await knex("crate").where({ id: crate_id }).update({ cover_art });
-		res.status(200).json(`Crate cover photo added successfully.`);
-	} catch (error) {
-		res.status(400).json(`Trouble adding crate cover photo.`);
-	}
-}
-
 async function create(req, res) {
 	const id = req.body.id;
 	const user_id = req.user_id;
@@ -48,17 +52,22 @@ async function create(req, res) {
 		return res.status(400).json(`Please name your crate.`);
 	}
 
+	// cover art is user upload, if no upload set to default
+	let cover_art;
+
+	if (req.file) {
+		cover_art = `${publicUrl}/${req.file.filename}`;
+	} else {
+		cover_art = `${publicUrl}/crate.svg`;
+	}
+
 	try {
-		await knex("crate").insert({ ...req.body, user_id });
+		await knex("crate").insert({ ...req.body, user_id, cover_art });
 
 		updateDefaultCrate(user_id);
 
-		// get created crate
-		const createdCrate = await knex("crate").where({ id }).first();
-
-		res.status(201).json(createdCrate);
+		res.status(201).json(`Crate created successfully.`);
 	} catch (error) {
-		console.log(error);
 		res.staus(400).json(`Error creating crate`);
 	}
 }
@@ -121,7 +130,6 @@ async function removeAlbum(req, res) {
 
 		res.status(203).json(`Album(s) removed successfully.`);
 	} catch (error) {
-		console.log(error);
 		res.status(400).json(`Problem removing album.`);
 	}
 }
@@ -134,7 +142,6 @@ async function removePhoto(req, res) {
 		await knex("crate").where({ id: crate_id }).update({ cover_art });
 		res.status(200).json(`Crate cover photo removed successfully.`);
 	} catch (error) {
-		console.log(error);
 		res.status(400).json(`Trouble removing crate cover photo.`);
 	}
 }
@@ -155,7 +162,6 @@ async function togglePinned(req, res) {
 
 		res.status(200).json("Crate pinned.");
 	} catch (error) {
-		console.log(error);
 		res.status(400).json(`Error pinning crate.`);
 	}
 }
@@ -177,7 +183,6 @@ async function update(req, res) {
 		res.status(200).json(`Crate renamed sucessfully.`);
 	} catch (error) {
 		res.status(400).json(`Error renaming crate.`);
-		console.log(error);
 	}
 }
 
@@ -187,11 +192,11 @@ module.exports = {
 	remove,
 	findOne,
 	addAlbum,
-	addPhoto,
 	removeAlbum,
 	removePhoto,
 	togglePinned,
 	update,
+	upload,
 };
 
 ///////////////////////////////
