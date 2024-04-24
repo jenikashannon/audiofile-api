@@ -1,6 +1,7 @@
 const knex = require("knex")(require("../knexfile"));
 const spotifyController = require("./spotify-controller");
 const multer = require("multer");
+const fs = require("fs");
 
 const pathToPublic = "./public/images/";
 const publicUrl = "http://localhost:1700/images";
@@ -45,7 +46,6 @@ async function addAlbum(req, res) {
 }
 
 async function create(req, res) {
-	const id = req.body.id;
 	const user_id = req.user_id;
 
 	if (!req.body.name) {
@@ -68,7 +68,7 @@ async function create(req, res) {
 
 		res.status(201).json(`Crate created successfully.`);
 	} catch (error) {
-		res.staus(400).json(`Error creating crate`);
+		res.status(400).json(`Error creating crate`);
 	}
 }
 
@@ -111,8 +111,20 @@ async function findOne(req, res) {
 
 async function remove(req, res) {
 	const crate_id = req.params.crate_id;
+
 	try {
+		// get crate photo path
+		const path = await knex("crate").where({ id: crate_id }).pluck("cover_art");
+
+		const fileName = path[0].split("/").pop();
+
+		// delete crate
 		await knex("crate").where({ id: crate_id }).del();
+
+		// delete user uploaded cover art for crate
+		if (fileName !== "crate.svg") {
+			fs.unlinkSync(`./public/images/${fileName}`);
+		}
 
 		res.status(200).json(`Crate permanently deleted.`);
 	} catch (error) {

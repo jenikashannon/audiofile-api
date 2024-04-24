@@ -7,7 +7,7 @@ const cratesController = require("../controllers/crates-controller");
 router
 	.route("/")
 	.get(cratesController.findAll)
-	.post(cratesController.upload.single("files"), cratesController.create);
+	.post(cratesController.upload.single("photo"), cratesController.create);
 
 router
 	.route("/:crate_id")
