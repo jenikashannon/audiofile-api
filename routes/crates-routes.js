@@ -1,4 +1,23 @@
 const express = require("express");
+const multer = require("multer");
+
+const pathToPublic = "./public/images/";
+const publicUrl = "http://localhost:1700/images/";
+
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, pathToPublic);
+	},
+
+	filename: function (req, file, cb) {
+		const fileName = req.params.crate_id;
+		const fileExt = file.mimetype.split("/")[1];
+
+		cb(null, `${fileName}.${fileExt}`);
+	},
+});
+
+const upload = multer({ storage: storage });
 
 const router = express.Router();
 
@@ -14,7 +33,9 @@ router
 	.patch(cratesController.update)
 	.put(cratesController.togglePinned);
 
-router.route("/:crate_id/photo").post(cratesController.addPhoto);
+router
+	.route("/:crate_id/photo")
+	.post(upload.single("photo"), cratesController.addPhoto);
 
 router.route("/:crate_id/:album_id").delete(cratesController.removeAlbum);
 

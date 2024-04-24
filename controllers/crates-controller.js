@@ -2,23 +2,6 @@ const knex = require("knex")(require("../knexfile"));
 const spotifyController = require("./spotify-controller");
 
 const fs = require("fs");
-const multer = require("multer");
-const uniqid = require("uniqid");
-
-const pathToPublic = "./public/images/";
-const publicUrl = "http://localhost:1700/images/";
-
-const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, pathToPublic);
-	},
-	filename: function (req, file, cb) {
-		const fileExt = file.mimetype.split("/")[1];
-		cb(null, `${uniqid()}.${fileExt}`);
-	},
-});
-
-const upload = multer({ storage: storage });
 
 async function addAlbum(req, res) {
 	const { album_id } = req.body;
@@ -46,6 +29,8 @@ async function addAlbum(req, res) {
 
 async function addPhoto(req, res) {
 	const user_id = req.user_id;
+
+	console.log(req.file);
 
 	try {
 		res.status(200).json(`working`);
