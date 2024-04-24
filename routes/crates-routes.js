@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 
 const pathToPublic = "./public/images/";
-const publicUrl = "http://localhost:1700/images/";
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {

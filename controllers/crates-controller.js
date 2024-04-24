@@ -2,6 +2,7 @@ const knex = require("knex")(require("../knexfile"));
 const spotifyController = require("./spotify-controller");
 
 const fs = require("fs");
+const publicUrl = "http://localhost:1700/images";
 
 async function addAlbum(req, res) {
 	const { album_id } = req.body;
@@ -28,14 +29,16 @@ async function addAlbum(req, res) {
 }
 
 async function addPhoto(req, res) {
-	const user_id = req.user_id;
+	const crate_id = req.params.crate_id;
 
-	console.log(req.file);
+	const cover_art = `${publicUrl}/${req.file.filename}`;
+	console.log(cover_art);
 
 	try {
-		res.status(200).json(`working`);
+		await knex("crate").where({ id: crate_id }).update({ cover_art });
+		res.status(200).json(`Crate cover photo added successfully.`);
 	} catch (error) {
-		res.status(400).json(`Trouble adding photo.`);
+		res.status(400).json(`Trouble adding crate cover photo.`);
 	}
 }
 
