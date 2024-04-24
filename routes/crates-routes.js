@@ -14,6 +14,8 @@ router
 	.patch(cratesController.update)
 	.put(cratesController.togglePinned);
 
+router.route("/:crate_id/photo").post(cratesController.addPhoto);
+
 router.route("/:crate_id/:album_id").delete(cratesController.removeAlbum);
 
 module.exports = router;
