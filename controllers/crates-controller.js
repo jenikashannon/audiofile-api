@@ -187,6 +187,16 @@ async function update(req, res) {
 		return res.status(400).json(`Please name your crate.`);
 	}
 
+	let cover_art = await knex("crate")
+		.where({ id: crate_id })
+		.pluck("cover_art");
+
+	console.log(cover_art);
+
+	if (req.file) {
+		cover_art = `${publicUrl}/${req.file.filename}`;
+	}
+
 	try {
 		await knex("crate").where({ id: crate_id }).update({ name });
 
