@@ -4,7 +4,7 @@ const multer = require("multer");
 const fs = require("fs");
 
 const pathToPublic = "./public/images/";
-const publicUrl = "http://localhost:1700/images";
+const publicUrl = "https://audiofile-backend-fab4f9e38733.herokuapp.com";
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {

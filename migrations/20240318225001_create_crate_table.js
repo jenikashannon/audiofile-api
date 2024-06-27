@@ -14,7 +14,9 @@ exports.up = function (knex) {
 		table.string("name").notNullable();
 		table
 			.string("cover_art")
-			.defaultTo("http://localhost:1700/images/crate.svg");
+			.defaultTo(
+				"https://audiofile-backend-fab4f9e38733.herokuapp.com/crate.svg"
+			);
 		table.boolean("default_crate").notNullable().defaultTo(false);
 		table.boolean("empty_crate").notNullable().defaultTo(true);
 		table.boolean("pinned_crate").notNullable().defaultTo(false);

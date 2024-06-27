@@ -1,6 +1,4 @@
 const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
 
 const jwtMiddleware = require("./middleware/jwt-middleware.js");
 const spotiftMiddleware = require("./middleware/spotify-middleware.js");
@@ -9,7 +7,18 @@ const app = express();
 
 const PORT = process.env.PORT ?? 1700;
 
-app.use(cors());
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Content-Type");
+
+	if (req.method === "OPTIONS") {
+		res.header("Access-Control-Allow-Methods", "POST, PUT, PATCH, GET, DELETE");
+		return res.status(200).json({});
+	}
+
+	next();
+});
+
 app.use(express.json());
 app.use(express.static("public"));
 

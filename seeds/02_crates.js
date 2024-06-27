@@ -10,7 +10,8 @@ exports.seed = async function (knex) {
 			id: "lueomqz424",
 			user_id: "1nmfd34zlu7amjrw",
 			name: "hear jenika sing & rap",
-			cover_art: "http://localhost:1700/images/crate.svg",
+			cover_art:
+				"https://audiofile-backend-fab4f9e38733.herokuapp.com/images/crate.svg",
 			default_crate: 0,
 			empty_crate: 0,
 			pinned_crate: 0,
@@ -19,7 +20,8 @@ exports.seed = async function (knex) {
 			id: "1nmfd34zlu7amjsa",
 			user_id: "1nmfd34zlu7amjrw",
 			name: "2019 obsessions.",
-			cover_art: "http://localhost:1700/images/crate.svg",
+			cover_art:
+				"https://audiofile-backend-fab4f9e38733.herokuapp.com/images/crate.svg",
 			default_crate: 0,
 			empty_crate: 0,
 			pinned_crate: 0,
@@ -28,7 +30,8 @@ exports.seed = async function (knex) {
 			id: "lu7nraoy",
 			user_id: "1nmfd34zlu7amjrw",
 			name: "2020 obsessions.",
-			cover_art: "http://localhost:1700/images/crate.svg",
+			cover_art:
+				"https://audiofile-backend-fab4f9e38733.herokuapp.com/images/crate.svg",
 			default_crate: 0,
 			empty_crate: 0,
 			pinned_crate: 0,
@@ -37,7 +40,8 @@ exports.seed = async function (knex) {
 			id: "luah0cr6",
 			user_id: "1nmfd34zlu7amjrw",
 			name: "pinned crate",
-			cover_art: "http://localhost:1700/images/crate.svg",
+			cover_art:
+				"https://audiofile-backend-fab4f9e38733.herokuapp.com/images/crate.svg",
 			default_crate: 0,
 			empty_crate: 0,
 			pinned_crate: 1,
@@ -46,7 +50,8 @@ exports.seed = async function (knex) {
 			id: "lueomqz4",
 			user_id: "1nmfdnhjlueo29e4",
 			name: "hear jenika sing & rap",
-			cover_art: "http://localhost:1700/images/crate.svg",
+			cover_art:
+				"https://audiofile-backend-fab4f9e38733.herokuapp.com/images/crate.svg",
 			default_crate: 0,
 			empty_crate: 0,
 			pinned_crate: 0,
