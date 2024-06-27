@@ -12,7 +12,11 @@ app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Headers", "Content-Type");
 
 	if (req.method === "OPTIONS") {
-		res.header("Access-Control-Allow-Methods", "POST, PUT, PATCH, GET, DELETE");
+		res.header(
+			"Access-Control-Allow-Methods",
+			"POST, PUT, PATCH, GET, DELETE",
+			"CONNECT"
+		);
 		return res.status(200).json({});
 	}
 
@@ -21,13 +25,6 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use(express.static("public"));
-
-app.use((req, res, next) => {
-	res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT", "CONNECT");
-	res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-	next();
-});
 
 const spotifyRoutes = require("./routes/spotify-routes.js");
 app.use(
