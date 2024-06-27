@@ -7,9 +7,11 @@ require("dotenv").config();
 module.exports = {
 	client: "mysql2",
 	connection: {
-		host: process.env.DB_HOST,
-		database: process.env.DB_NAME,
-		user: process.env.DB_USER,
-		password: process.env.DB_PASSWORD,
+		host: process.env.STACKHERO_MYSQL_HOST,
+		port: process.env.STACKHERO_MYSQL_PORT,
+		password: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
+		user: "root",
+		database: "root",
+		ssl: {},
 	},
 };
